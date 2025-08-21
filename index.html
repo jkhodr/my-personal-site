@@ -3,193 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluid Effect Debug</title>
+    <title>Fluid Effect Debug v2</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; overflow-x: hidden; position: relative; }
+        
+        #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        
+        #debug-panel { 
+            position: fixed; 
+            bottom: 10px; 
+            left: 10px; 
+            background: rgba(255, 0, 0, 0.9); 
+            color: white; 
+            padding: 15px; 
+            border-radius: 10px; 
+            font-family: monospace; 
+            font-size: 14px; 
+            z-index: 2000;
+            border: 2px solid yellow;
         }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Particle Canvas Background */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        /* Debug Panel */
-        #debug-panel {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            z-index: 1000;
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(15, 15, 35, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #64ffda;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.9);
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #64ffda;
-        }
-
-        /* Hero Section */
-        .hero {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-            min-height: 100vh;
-            padding: 100px 2rem 50px;
-        }
-
-        .hero-content {
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: #ffffff;
-            text-shadow: 0 0 30px rgba(100, 255, 218, 0.5);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: transparent;
-            border: 2px solid #64ffda;
-            color: #64ffda;
-            text-decoration: none;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-        }
-
-        .cta-button:hover {
-            background: #64ffda;
-            color: #0f0f23;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 25px rgba(100, 255, 218, 0.5);
-        }
+        
+        .navbar { position: fixed; top: 0; width: 100%; background: rgba(15, 15, 35, 0.9); backdrop-filter: blur(10px); padding: 1rem 2rem; z-index: 1000; transition: all 0.3s ease; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #64ffda; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: rgba(255, 255, 255, 0.9); transition: color 0.3s ease; }
+        .nav-links a:hover { color: #64ffda; }
+        
+        .hero { display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative; min-height: 100vh; padding: 100px 2rem 50px; }
+        .hero-content { z-index: 2; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; color: #ffffff; text-shadow: 0 0 30px rgba(100, 255, 218, 0.5); }
+        .hero p { font-size: 1.2rem; margin-bottom: 2rem; color: rgba(255, 255, 255, 0.8); }
+        .cta-button { display: inline-block; padding: 15px 30px; background: transparent; border: 2px solid #64ffda; color: #64ffda; text-decoration: none; border-radius: 50px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
+        .cta-button:hover { background: #64ffda; color: #0f0f23; transform: translateY(-2px); box-shadow: 0 5px 25px rgba(100, 255, 218, 0.5); }
     </style>
 </head>
 <body>
-    <!-- Debug Panel -->
     <div id="debug-panel">
+        <div><strong>FLUID DEBUG v2.0</strong></div>
         <div>Status: <span id="status">Loading...</span></div>
         <div>Canvas: <span id="canvas-status">Not found</span></div>
-        <div>Dots: <span id="dots-count">0</span></div>
-        <div>Mouse: <span id="mouse-pos">--, --</span></div>
-        <div>Events: <span id="events-count">0</span></div>
+        <div>Dots Created: <span id="dots-count">0</span></div>
+        <div>Mouse Events: <span id="events-count">0</span></div>
+        <div>Animation Frames: <span id="frame-count">0</span></div>
+        <div>Points Displaced: <span id="displaced-count">0</span></div>
+        <div>Mouse Position: <span id="mouse-pos">--, --</span></div>
+        <div>Internal Mouse: <span id="internal-mouse">--, --</span></div>
     </div>
 
-    <!-- Particle Canvas Background -->
     <canvas id="particles-canvas"></canvas>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">Your Name</div>
+            <div class="logo">DEBUG VERSION 2.0</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>Debug Version</h1>
-            <p>Move your mouse around to test the fluid effect</p>
-            <a href="#about" class="cta-button">Test Effect</a>
+            <h1>Fluid Debug v2</h1>
+            <p>Check the red debug panel in bottom-left</p>
+            <a href="#" class="cta-button">Move Mouse to Test</a>
         </div>
     </section>
 
     <script>
-        // Debug variables
+        console.log("=== FLUID DEBUG v2.0 STARTING ===");
+        
         let eventCount = 0;
         let frameCount = 0;
         
-        // Update debug panel
         function updateDebug(key, value) {
             const element = document.getElementById(key);
-            if (element) element.textContent = value;
+            if (element) {
+                element.textContent = value;
+                console.log(`DEBUG: ${key} = ${value}`);
+            } else {
+                console.warn(`DEBUG: Element ${key} not found!`);
+            }
         }
 
-        // Fluid Displacement System
         class FluidDisplacementSystem {
             constructor(canvas) {
+                console.log("FluidDisplacementSystem constructor starting...");
                 updateDebug('status', 'Initializing...');
                 
                 this.canvas = canvas;
                 this.ctx = canvas.getContext('2d');
                 this.mouse = { x: -1000, y: -1000 };
                 this.isRunning = false;
-
-                // Fluid properties
                 this.gridSize = 15;
                 this.liquidPoints = [];
                 this.underlyingDots = [];
@@ -197,8 +103,6 @@
                 this.maxDisplacement = 80;
                 this.flowBackSpeed = 0.05;
                 this.rippleEffect = 0;
-
-                // Colors
                 this.liquidColor = 'rgba(15, 15, 35, 0.95)';
                 this.dotColor = 'rgba(147, 51, 234, 0.8)';
                 this.dotGlow = 'rgba(147, 51, 234, 0.4)';
@@ -206,70 +110,42 @@
                 try {
                     this.resize();
                     this.init();
-                    this.start();
                     this.setupEventListeners();
-                    updateDebug('status', 'Running');
-                    updateDebug('canvas-status', 'Active');
+                    this.start();
+                    updateDebug('status', 'RUNNING');
+                    updateDebug('canvas-status', 'ACTIVE');
+                    console.log("FluidDisplacementSystem initialized successfully!");
                 } catch (error) {
-                    updateDebug('status', 'Error: ' + error.message);
+                    updateDebug('status', 'ERROR: ' + error.message);
                     console.error('Fluid system error:', error);
                 }
             }
 
             setupEventListeners() {
-                window.addEventListener('resize', () => this.resize());
-
-                let lastMouseTime = Date.now();
-                let lastMouseX = 0;
-                let lastMouseY = 0;
-
+                console.log("Setting up event listeners...");
+                
                 this.canvas.addEventListener('mousemove', (e) => {
                     eventCount++;
-                    updateDebug('events-count', eventCount);
-                    
                     const rect = this.canvas.getBoundingClientRect();
                     const newX = e.clientX - rect.left;
                     const newY = e.clientY - rect.top;
 
-                    updateDebug('mouse-pos', Math.round(newX) + ', ' + Math.round(newY));
-
-                    // Calculate mouse speed for ripple effect
-                    const currentTime = Date.now();
-                    const deltaTime = currentTime - lastMouseTime;
-                    const deltaX = newX - lastMouseX;
-                    const deltaY = newY - lastMouseY;
-                    const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / deltaTime;
-
                     this.mouse.x = newX;
                     this.mouse.y = newY;
-                    this.rippleEffect = Math.min(speed * 5, 2.0);
                     
+                    updateDebug('events-count', eventCount);
+                    updateDebug('mouse-pos', Math.round(newX) + ', ' + Math.round(newY));
                     updateDebug('internal-mouse', Math.round(this.mouse.x) + ', ' + Math.round(this.mouse.y));
-
-                    lastMouseTime = currentTime;
-                    lastMouseX = newX;
-                    lastMouseY = newY;
                 });
 
                 this.canvas.addEventListener('mouseleave', () => {
                     this.mouse.x = -1000;
                     this.mouse.y = -1000;
-                    this.rippleEffect = 0;
-                    updateDebug('mouse-pos', 'Outside');
+                    updateDebug('mouse-pos', 'OUTSIDE');
+                    updateDebug('internal-mouse', 'OUTSIDE');
                 });
 
-                // Also try document-level events as backup
-                document.addEventListener('mousemove', (e) => {
-                    if (eventCount === 0) {
-                        // If canvas events aren't working, fall back to document
-                        eventCount++;
-                        updateDebug('events-count', eventCount + ' (doc)');
-                        
-                        this.mouse.x = e.clientX;
-                        this.mouse.y = e.clientY;
-                        updateDebug('mouse-pos', Math.round(e.clientX) + ', ' + Math.round(e.clientY) + ' (doc)');
-                    }
-                });
+                window.addEventListener('resize', () => this.resize());
             }
 
             resize() {
@@ -279,19 +155,16 @@
                 this.canvas.style.width = window.innerWidth + 'px';
                 this.canvas.style.height = window.innerHeight + 'px';
                 this.ctx.scale(dpr, dpr);
-
                 this.init();
             }
 
             init() {
                 this.liquidPoints = [];
                 this.underlyingDots = [];
-
                 const width = window.innerWidth;
                 const height = window.innerHeight;
-
-                // Create underlying purple dots
                 const dotCount = Math.floor((width * height) / 15000);
+                
                 for (let i = 0; i < dotCount; i++) {
                     this.underlyingDots.push({
                         x: Math.random() * width,
@@ -302,13 +175,10 @@
                         pulseOffset: Math.random() * Math.PI * 2
                     });
                 }
-
                 updateDebug('dots-count', this.underlyingDots.length);
 
-                // Create liquid grid points
                 const cols = Math.ceil(width / this.gridSize) + 2;
                 const rows = Math.ceil(height / this.gridSize) + 2;
-
                 for (let i = 0; i < rows; i++) {
                     for (let j = 0; j < cols; j++) {
                         this.liquidPoints.push({
@@ -325,13 +195,14 @@
             start() {
                 if (!this.isRunning) {
                     this.isRunning = true;
+                    console.log("Starting animation loop...");
                     this.animate();
                 }
             }
 
             animate() {
                 if (!this.isRunning) return;
-
+                
                 frameCount++;
                 updateDebug('frame-count', frameCount);
 
@@ -339,17 +210,14 @@
                     const width = window.innerWidth;
                     const height = window.innerHeight;
                     const time = Date.now() * 0.001;
-
-                    // Clear canvas
                     this.ctx.clearRect(0, 0, width, height);
 
-                    // Update and draw underlying purple dots first
+                    // Draw dots
                     this.underlyingDots.forEach(dot => {
                         const pulse = Math.sin(time * dot.pulseSpeed + dot.pulseOffset) * 0.3 + 0.7;
                         const currentRadius = dot.radius * pulse;
                         const currentOpacity = dot.opacity * pulse;
 
-                        // Draw dot with glow
                         this.ctx.beginPath();
                         this.ctx.arc(dot.x, dot.y, currentRadius + 5, 0, Math.PI * 2);
                         this.ctx.fillStyle = this.dotGlow.replace('0.4', (currentOpacity * 0.3).toString());
@@ -361,19 +229,17 @@
                         this.ctx.fill();
                     });
 
-                    // Update liquid points displacement
+                    // Update liquid points
                     let displacedCount = 0;
                     this.liquidPoints.forEach(point => {
                         if (this.mouse.x > -500 && this.mouse.y > -500) {
                             const dx = this.mouse.x - point.originalX;
                             const dy = this.mouse.y - point.originalY;
                             const distance = Math.sqrt(dx * dx + dy * dy);
-                            const effectRadius = this.displacementRadius * (1 + this.rippleEffect);
-
-                            if (distance < effectRadius) {
-                                const force = 1 - (distance / effectRadius);
-                                const displacement = force * this.maxDisplacement * (1 + this.rippleEffect);
-
+                            
+                            if (distance < this.displacementRadius) {
+                                const force = 1 - (distance / this.displacementRadius);
+                                const displacement = force * this.maxDisplacement;
                                 const angle = Math.atan2(dy, dx);
                                 const targetX = point.originalX + Math.cos(angle) * displacement;
                                 const targetY = point.originalY + Math.sin(angle) * displacement;
@@ -385,104 +251,62 @@
                             } else {
                                 point.x += (point.originalX - point.x) * this.flowBackSpeed;
                                 point.y += (point.originalY - point.y) * this.flowBackSpeed;
-
-                                const returnDistance = Math.sqrt(
-                                    (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
-                                );
+                                const returnDistance = Math.sqrt((point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2);
                                 point.displaced = returnDistance > 1;
+                                if (point.displaced) displacedCount++;
                             }
                         } else {
                             point.x += (point.originalX - point.x) * this.flowBackSpeed;
                             point.y += (point.originalY - point.y) * this.flowBackSpeed;
-
-                            const returnDistance = Math.sqrt(
-                                (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
-                            );
+                            const returnDistance = Math.sqrt((point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2);
                             point.displaced = returnDistance > 1;
+                            if (point.displaced) displacedCount++;
                         }
-                        
-                        if (point.displaced) displacedCount++;
                     });
-
+                    
                     updateDebug('displaced-count', displacedCount);
-
-                    this.rippleEffect *= 0.95;
                     this.drawLiquidSurface(width, height);
-
                     requestAnimationFrame(() => this.animate());
+                    
                 } catch (error) {
-                    updateDebug('status', 'Animate Error: ' + error.message);
+                    updateDebug('status', 'ANIMATE ERROR: ' + error.message);
                     console.error('Animation error:', error);
-                    // Try to continue anyway
                     requestAnimationFrame(() => this.animate());
                 }
             }
 
             drawLiquidSurface(width, height) {
-                try {
-                    this.ctx.fillStyle = this.liquidColor;
-                    this.ctx.fillRect(0, 0, width, height);
+                this.ctx.fillStyle = this.liquidColor;
+                this.ctx.fillRect(0, 0, width, height);
+                this.ctx.globalCompositeOperation = 'destination-out';
 
-                    this.ctx.globalCompositeOperation = 'destination-out';
-
-                    this.liquidPoints.forEach(point => {
-                        if (point.displaced) {
-                            const displacementAmount = Math.sqrt(
-                                (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
-                            );
-                            const holeRadius = (displacementAmount / this.maxDisplacement) * 25;
-
-                            if (holeRadius > 2) {
-                                const gradient = this.ctx.createRadialGradient(
-                                    point.originalX, point.originalY, 0,
-                                    point.originalX, point.originalY, holeRadius
-                                );
-                                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
-                                gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.4)');
-                                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-                                this.ctx.beginPath();
-                                this.ctx.arc(point.originalX, point.originalY, holeRadius, 0, Math.PI * 2);
-                                this.ctx.fillStyle = gradient;
-                                this.ctx.fill();
-                            }
+                this.liquidPoints.forEach(point => {
+                    if (point.displaced) {
+                        const displacementAmount = Math.sqrt((point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2);
+                        const holeRadius = (displacementAmount / this.maxDisplacement) * 25;
+                        if (holeRadius > 2) {
+                            this.ctx.beginPath();
+                            this.ctx.arc(point.originalX, point.originalY, holeRadius, 0, Math.PI * 2);
+                            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                            this.ctx.fill();
                         }
-                    });
+                    }
+                });
 
-                    this.ctx.globalCompositeOperation = 'source-over';
-                } catch (error) {
-                    updateDebug('status', 'Draw Error: ' + error.message);
-                    console.error('Draw error:', error);
-                    this.ctx.globalCompositeOperation = 'source-over';
-                }
+                this.ctx.globalCompositeOperation = 'source-over';
             }
         }
 
-        // Initialize fluid displacement system
-        let fluidSystem;
-
-        function initFluidSystem() {
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('particles-canvas');
             if (canvas) {
-                try {
-                    fluidSystem = new FluidDisplacementSystem(canvas);
-                    console.log('Fluid displacement system started successfully');
-                } catch (error) {
-                    updateDebug('status', 'Init Error');
-                    console.error('Canvas not found or system failed!', error);
-                }
+                new FluidDisplacementSystem(canvas);
             } else {
-                updateDebug('canvas-status', 'Not found');
                 console.error('Canvas not found!');
+                updateDebug('canvas-status', 'NOT FOUND');
             }
-        }
-
-        // Initialize immediately and also on load as backup
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initFluidSystem);
-        } else {
-            initFluidSystem();
-        }
+        });
     </script>
 </body>
 </html>
