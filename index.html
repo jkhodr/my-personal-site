@@ -32,8 +32,8 @@
         /* Debug Panel */
         #debug-panel {
             position: fixed;
-            top: 10px;
-            right: 10px;
+            bottom: 10px;
+            left: 10px;
             background: rgba(0, 0, 0, 0.8);
             color: white;
             padding: 10px;
@@ -171,6 +171,7 @@
     <script>
         // Debug variables
         let eventCount = 0;
+        let frameCount = 0;
         
         // Update debug panel
         function updateDebug(key, value) {
@@ -242,6 +243,8 @@
                     this.mouse.x = newX;
                     this.mouse.y = newY;
                     this.rippleEffect = Math.min(speed * 5, 2.0);
+                    
+                    updateDebug('internal-mouse', Math.round(this.mouse.x) + ', ' + Math.round(this.mouse.y));
 
                     lastMouseTime = currentTime;
                     lastMouseX = newX;
@@ -329,50 +332,65 @@
             animate() {
                 if (!this.isRunning) return;
 
-                const width = window.innerWidth;
-                const height = window.innerHeight;
-                const time = Date.now() * 0.001;
+                frameCount++;
+                updateDebug('frame-count', frameCount);
 
-                // Clear canvas
-                this.ctx.clearRect(0, 0, width, height);
+                try {
+                    const width = window.innerWidth;
+                    const height = window.innerHeight;
+                    const time = Date.now() * 0.001;
 
-                // Update and draw underlying purple dots first
-                this.underlyingDots.forEach(dot => {
-                    const pulse = Math.sin(time * dot.pulseSpeed + dot.pulseOffset) * 0.3 + 0.7;
-                    const currentRadius = dot.radius * pulse;
-                    const currentOpacity = dot.opacity * pulse;
+                    // Clear canvas
+                    this.ctx.clearRect(0, 0, width, height);
 
-                    // Draw dot with glow
-                    this.ctx.beginPath();
-                    this.ctx.arc(dot.x, dot.y, currentRadius + 5, 0, Math.PI * 2);
-                    this.ctx.fillStyle = this.dotGlow.replace('0.4', (currentOpacity * 0.3).toString());
-                    this.ctx.fill();
+                    // Update and draw underlying purple dots first
+                    this.underlyingDots.forEach(dot => {
+                        const pulse = Math.sin(time * dot.pulseSpeed + dot.pulseOffset) * 0.3 + 0.7;
+                        const currentRadius = dot.radius * pulse;
+                        const currentOpacity = dot.opacity * pulse;
 
-                    this.ctx.beginPath();
-                    this.ctx.arc(dot.x, dot.y, currentRadius, 0, Math.PI * 2);
-                    this.ctx.fillStyle = this.dotColor.replace('0.8', currentOpacity.toString());
-                    this.ctx.fill();
-                });
+                        // Draw dot with glow
+                        this.ctx.beginPath();
+                        this.ctx.arc(dot.x, dot.y, currentRadius + 5, 0, Math.PI * 2);
+                        this.ctx.fillStyle = this.dotGlow.replace('0.4', (currentOpacity * 0.3).toString());
+                        this.ctx.fill();
 
-                // Update liquid points displacement
-                this.liquidPoints.forEach(point => {
-                    if (this.mouse.x > -500 && this.mouse.y > -500) {
-                        const dx = this.mouse.x - point.originalX;
-                        const dy = this.mouse.y - point.originalY;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-                        const effectRadius = this.displacementRadius * (1 + this.rippleEffect);
+                        this.ctx.beginPath();
+                        this.ctx.arc(dot.x, dot.y, currentRadius, 0, Math.PI * 2);
+                        this.ctx.fillStyle = this.dotColor.replace('0.8', currentOpacity.toString());
+                        this.ctx.fill();
+                    });
 
-                        if (distance < effectRadius) {
-                            const force = 1 - (distance / effectRadius);
-                            const displacement = force * this.maxDisplacement * (1 + this.rippleEffect);
+                    // Update liquid points displacement
+                    let displacedCount = 0;
+                    this.liquidPoints.forEach(point => {
+                        if (this.mouse.x > -500 && this.mouse.y > -500) {
+                            const dx = this.mouse.x - point.originalX;
+                            const dy = this.mouse.y - point.originalY;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            const effectRadius = this.displacementRadius * (1 + this.rippleEffect);
 
-                            const angle = Math.atan2(dy, dx);
-                            const targetX = point.originalX + Math.cos(angle) * displacement;
-                            const targetY = point.originalY + Math.sin(angle) * displacement;
+                            if (distance < effectRadius) {
+                                const force = 1 - (distance / effectRadius);
+                                const displacement = force * this.maxDisplacement * (1 + this.rippleEffect);
 
-                            point.x += (targetX - point.x) * 0.15;
-                            point.y += (targetY - point.y) * 0.15;
-                            point.displaced = true;
+                                const angle = Math.atan2(dy, dx);
+                                const targetX = point.originalX + Math.cos(angle) * displacement;
+                                const targetY = point.originalY + Math.sin(angle) * displacement;
+
+                                point.x += (targetX - point.x) * 0.15;
+                                point.y += (targetY - point.y) * 0.15;
+                                point.displaced = true;
+                                displacedCount++;
+                            } else {
+                                point.x += (point.originalX - point.x) * this.flowBackSpeed;
+                                point.y += (point.originalY - point.y) * this.flowBackSpeed;
+
+                                const returnDistance = Math.sqrt(
+                                    (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
+                                );
+                                point.displaced = returnDistance > 1;
+                            }
                         } else {
                             point.x += (point.originalX - point.x) * this.flowBackSpeed;
                             point.y += (point.originalY - point.y) * this.flowBackSpeed;
@@ -382,54 +400,61 @@
                             );
                             point.displaced = returnDistance > 1;
                         }
-                    } else {
-                        point.x += (point.originalX - point.x) * this.flowBackSpeed;
-                        point.y += (point.originalY - point.y) * this.flowBackSpeed;
+                        
+                        if (point.displaced) displacedCount++;
+                    });
 
-                        const returnDistance = Math.sqrt(
-                            (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
-                        );
-                        point.displaced = returnDistance > 1;
-                    }
-                });
+                    updateDebug('displaced-count', displacedCount);
 
-                this.rippleEffect *= 0.95;
-                this.drawLiquidSurface(width, height);
+                    this.rippleEffect *= 0.95;
+                    this.drawLiquidSurface(width, height);
 
-                requestAnimationFrame(() => this.animate());
+                    requestAnimationFrame(() => this.animate());
+                } catch (error) {
+                    updateDebug('status', 'Animate Error: ' + error.message);
+                    console.error('Animation error:', error);
+                    // Try to continue anyway
+                    requestAnimationFrame(() => this.animate());
+                }
             }
 
             drawLiquidSurface(width, height) {
-                this.ctx.fillStyle = this.liquidColor;
-                this.ctx.fillRect(0, 0, width, height);
+                try {
+                    this.ctx.fillStyle = this.liquidColor;
+                    this.ctx.fillRect(0, 0, width, height);
 
-                this.ctx.globalCompositeOperation = 'destination-out';
+                    this.ctx.globalCompositeOperation = 'destination-out';
 
-                this.liquidPoints.forEach(point => {
-                    if (point.displaced) {
-                        const displacementAmount = Math.sqrt(
-                            (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
-                        );
-                        const holeRadius = (displacementAmount / this.maxDisplacement) * 25;
-
-                        if (holeRadius > 2) {
-                            const gradient = this.ctx.createRadialGradient(
-                                point.originalX, point.originalY, 0,
-                                point.originalX, point.originalY, holeRadius
+                    this.liquidPoints.forEach(point => {
+                        if (point.displaced) {
+                            const displacementAmount = Math.sqrt(
+                                (point.x - point.originalX) ** 2 + (point.y - point.originalY) ** 2
                             );
-                            gradient.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
-                            gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.4)');
-                            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                            const holeRadius = (displacementAmount / this.maxDisplacement) * 25;
 
-                            this.ctx.beginPath();
-                            this.ctx.arc(point.originalX, point.originalY, holeRadius, 0, Math.PI * 2);
-                            this.ctx.fillStyle = gradient;
-                            this.ctx.fill();
+                            if (holeRadius > 2) {
+                                const gradient = this.ctx.createRadialGradient(
+                                    point.originalX, point.originalY, 0,
+                                    point.originalX, point.originalY, holeRadius
+                                );
+                                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
+                                gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.4)');
+                                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+                                this.ctx.beginPath();
+                                this.ctx.arc(point.originalX, point.originalY, holeRadius, 0, Math.PI * 2);
+                                this.ctx.fillStyle = gradient;
+                                this.ctx.fill();
+                            }
                         }
-                    }
-                });
+                    });
 
-                this.ctx.globalCompositeOperation = 'source-over';
+                    this.ctx.globalCompositeOperation = 'source-over';
+                } catch (error) {
+                    updateDebug('status', 'Draw Error: ' + error.message);
+                    console.error('Draw error:', error);
+                    this.ctx.globalCompositeOperation = 'source-over';
+                }
             }
         }
 
