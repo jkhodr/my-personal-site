@@ -248,26 +248,6 @@ document.querySelectorAll('.timeline-content').forEach(item => {
     });
 });
 
-// Contact form submission
-document.querySelector('.contact-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('.submit-btn');
-    const originalText = btn.textContent;
-    
-    btn.textContent = 'Sending...';
-    btn.disabled = true;
-    
-    // Simulate form submission
-    setTimeout(() => {
-        btn.textContent = 'Message Sent!';
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.disabled = false;
-            e.target.reset();
-        }, 2000);
-    }, 1500);
-});
-
 // Performance optimization - reduce particle count on mobile
 if (window.innerWidth < 768 && particleSystem) {
     particleSystem.particleCount = 50;
