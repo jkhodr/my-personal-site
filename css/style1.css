@@ -194,7 +194,7 @@ section {
     justify-content: center;
     margin: 0 auto;
     border: 1px solid #000000;
-    filter: grayscale(100%);
+    /*filter: grayscale(100%);*/
 }
 
 .about-text {
