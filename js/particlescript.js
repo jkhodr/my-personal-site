@@ -21,15 +21,12 @@ class ParticleSystem {
     }
     
     setupEventListeners() {
-        console.log('Setting up event listeners for canvas:', this.canvas); // Add this line
-        
         window.addEventListener('resize', () => this.resize());
         
         this.canvas.addEventListener('mousemove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             this.mouse.x = e.clientX - rect.left;
             this.mouse.y = e.clientY - rect.top;
-            console.log('Mouse:', this.mouse.x, this.mouse.y); // Add this debug line
         });
         
         this.canvas.addEventListener('mouseleave', () => {
