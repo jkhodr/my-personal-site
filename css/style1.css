@@ -116,6 +116,7 @@ section {
 
 .about-title {
     text-align: left; /* overrides just About Me */
+    margin-left: 2rem; /* match the box's padding */
 }
 
 .section-title.animate {
