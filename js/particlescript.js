@@ -21,6 +21,8 @@ class ParticleSystem {
     }
     
     setupEventListeners() {
+        console.log('Setting up event listeners for canvas:', this.canvas);
+        
         window.addEventListener('resize', () => this.resize());
         
         this.canvas.addEventListener('mousemove', (e) => {
@@ -115,9 +117,9 @@ class ParticleSystem {
             // Draw particle
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(100, 255, 218, ${particle.opacity})`;
-            this.ctx.shadowBlur = 10;
-            this.ctx.shadowColor = 'rgba(100, 255, 218, 0.5)';
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${particle.opacity * 0.3})`;
+            this.ctx.shadowBlur = 8;
+            this.ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
             this.ctx.fill();
             this.ctx.shadowBlur = 0;
         });
@@ -131,11 +133,11 @@ class ParticleSystem {
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < this.connectionDistance) {
-                    const opacity = (1 - distance / this.connectionDistance) * 0.4;
+                    const opacity = (1 - distance / this.connectionDistance) * 0.2;
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.strokeStyle = `rgba(100, 255, 218, ${opacity})`;
+                    this.ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`;
                     this.ctx.stroke();
                 }
             }
@@ -149,12 +151,12 @@ class ParticleSystem {
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < 200) {
-                    const opacity = (1 - distance / 200) * 0.6;
+                    const opacity = (1 - distance / 200) * 0.3;
                     this.ctx.beginPath();
                     this.ctx.moveTo(particle.x, particle.y);
                     this.ctx.lineTo(this.mouse.x, this.mouse.y);
-                    this.ctx.strokeStyle = `rgba(100, 255, 218, ${opacity})`;
-                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`;
+                    this.ctx.lineWidth = 1;
                     this.ctx.stroke();
                     this.ctx.lineWidth = 1;
                 }
@@ -253,3 +255,8 @@ if (window.innerWidth < 768 && particleSystem) {
     particleSystem.particleCount = 50;
     particleSystem.init();
 }
+
+// Temporary test - remove this after testing
+document.addEventListener('mousemove', (e) => {
+    console.log('Document mouse move:', e.clientX, e.clientY);
+});
