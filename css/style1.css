@@ -186,9 +186,9 @@ section {
 }
 
 #about .section-title {
-  grid-column: 2;           /* force title into text column */
+  grid-column: auto;           /* force title into text column */
   text-align: left;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .about-content {
@@ -476,18 +476,16 @@ section {
 .contact-icon {
     width: 40px;
     height: 40px;
+    background: #000000;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #ffffff;
     margin-right: 1rem;
+    font-weight: 400;
+    font-size: 0.8rem;
 }
-
-.contact-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
 
 .contact-item div {
     color: #444444;
