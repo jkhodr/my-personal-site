@@ -543,3 +543,13 @@ section {
         padding: 80px 1rem 30px;
     }
 }
+
+/* Make sections allow mouse events to pass through to canvas below */
+section, .navbar, .hero, .about-content, .skills-grid, .timeline, .contact-content {
+    pointer-events: none;
+}
+
+/* But make interactive elements clickable again */
+a, button, .timeline-content, .nav-links a, .cta-button {
+    pointer-events: auto;
+}
