@@ -185,6 +185,13 @@ section {
   align-items: start;
 }
 
+.about-text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* controls dynamic spacing between title and frosted box */
+}
+
+
 #about .section-title {
   grid-column: auto;           /* force title into text column */
   text-align: left;
@@ -198,6 +205,26 @@ section {
   column-gap: 4rem;
   align-items: center;
 }
+
+.about-content-box {
+    background: rgba(255, 255, 255, 0.025);  /* semi-transparent white */
+    backdrop-filter: blur(4px);             /* frosted glass effect */
+    -webkit-backdrop-filter: blur(4px);     /* Safari support */
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);  /* subtle border */
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.about-content-box .about-text p {
+    font-size: 1.1rem;       /* original size */
+    margin-bottom: 1.5rem;   /* original paragraph spacing */
+    color: #444444;          /* original text color */
+    font-weight: 300;        /* original weight */
+    line-height: 1.7;        /* original line height */
+    text-align: left;        /* or center for mobile */
+}
+
 
 .profile-image {
   width: 250px;
@@ -281,18 +308,13 @@ section {
 }
 
 .skill-category {
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(255, 255, 255, 0.025);  /* semi-transparent white */
+    backdrop-filter: blur(4px);             /* frosted glass effect */
+    -webkit-backdrop-filter: blur(4px);     /* Safari support */
     padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);  /* subtle border */
     border-radius: 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-}
-
-.skill-category:hover {
-    transform: translateY(-2px);
-    background: rgba(0, 0, 0, 0.04);
-    border-color: rgba(0, 0, 0, 0.2);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 .skill-category h4 {
@@ -388,21 +410,14 @@ section {
 }
 
 .timeline-content {
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(255, 255, 255, 0.025);  /* semi-transparent white */
+    backdrop-filter: blur(4px);             /* frosted glass effect */
+    -webkit-backdrop-filter: blur(4px);     /* Safari support */
     padding: 2rem;
+    border: 0.5px solid rgba(0, 0, 0, 1);  /* subtle border */
     border-radius: 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    cursor: pointer;
     transition: all 0.3s ease;
 }
-
-.timeline-content:hover {
-    transform: translateY(-2px);
-    background: rgba(0, 0, 0, 0.04);
-    border-color: rgba(0, 0, 0, 0.2);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-}
-
 
 
 .job-title {
@@ -454,10 +469,13 @@ section {
 }
 
 .contact-info {
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(255, 255, 255, 0.025);  /* semi-transparent white */
+    backdrop-filter: blur(4px);             /* frosted glass effect */
+    -webkit-backdrop-filter: blur(4px);     /* Safari support */
     padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);  /* subtle border */
     border-radius: 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .contact-info h3 {
@@ -496,78 +514,6 @@ section {
 .contact-item strong {
     color: #000000;
     font-weight: 500;
-}
-
-.contact-form {
-    background: rgba(0, 0, 0, 0.02);
-    padding: 2rem;
-    border-radius: 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.contact-form h3 {
-    color: #000000;
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #000000;
-    font-weight: 400;
-    font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 0;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-    background: #ffffff;
-    color: #000000;
-    font-family: inherit;
-    font-weight: 300;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #000000;
-    box-shadow: none;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: #999999;
-    font-weight: 300;
-}
-
-.submit-btn {
-    background: #000000;
-    color: #ffffff;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    font-size: 0.85rem;
-    font-family: inherit;
-}
-
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Animations */
