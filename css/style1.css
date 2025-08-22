@@ -544,12 +544,14 @@ section {
     }
 }
 
-/* Make sections allow mouse events to pass through to canvas below */
-section, .navbar, .hero, .about-content, .skills-grid, .timeline, .contact-content {
+/* Make ALL elements allow mouse events to pass through to canvas below */
+*, *::before, *::after {
     pointer-events: none;
 }
 
 /* But make interactive elements clickable again */
-a, button, .timeline-content, .nav-links a, .cta-button {
+a, button, .timeline-content, .nav-links a, .cta-button, .navbar, input, textarea, select {
+    pointer-events: auto;
+}
     pointer-events: auto;
 }
