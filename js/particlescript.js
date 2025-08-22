@@ -260,3 +260,21 @@ if (window.innerWidth < 768 && particleSystem) {
 document.addEventListener('mousemove', (e) => {
     console.log('Document mouse move:', e.clientX, e.clientY);
 });
+
+// Add hamburger menu listener
+function initMenuToggle() {
+    const toggle = document.getElementById("menu-toggle");
+    if (toggle) {
+        toggle.addEventListener("click", function() {
+            document.querySelector(".nav-links").classList.toggle("active");
+        });
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initMenuToggle();
+    });
+} else {
+    initMenuToggle();
+}

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="https://raw.githubusercontent.com/jkhodr/my-personal-site/refs/heads/main/images/linkedin_banner_sq.jpeg" />
     <title>Johnathan Khodr</title>
     <link rel="stylesheet" href="css/style1.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -22,8 +21,9 @@
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#experience">Experience</a></li>
-            <li><a href="#contact">Get in Touch</a></li>
+            <li><a href="#contact">Get In Touch</a></li>
         </ul>
+        <div class="menu-toggle" id="menu-toggle">☰</div>
     </div>
 </nav>
 
@@ -38,11 +38,11 @@
 
 <!-- About Section -->
 <section id="about">
-    <h2 class="section-title">About Me</h2>
+    <h2 class="section-title about-title">About Me</h2>
     <div class="about-content">
         <div class="profile-image"></div>
         <div class="about-text">
-            <h3>Professional Summary</h3>
+        <!--    <h3>Professional Summary</h3> -->
             <p>Experienced data professional with a strong background in Python programming and Tableau dashboard development. Passionate about turning complex data into actionable insights that drive business decisions.</p>
             <p>I thrive in collaborative environments and enjoy tackling challenging analytical problems. My approach combines technical expertise with clear communication to deliver results that matter.</p>
             <p>Currently seeking new opportunities where I can leverage my analytical skills and continue growing in the data science field.</p>
@@ -177,30 +177,29 @@
     <h2 class="section-title">Get In Touch</h2>
     <div class="contact-content">
         <div class="contact-info">
-            <h3>Contact Information</h3>
+            <!--<h3>Contact Information</h3>-->
             <div class="contact-item">
-                <div class="contact-icon">📧</div>
+                <div class="contact-icon">
+                    <img src="images/email-icon.png" alt="Email" />
+                </div>
                 <div>
                     <strong>Email</strong><br>
                     your.email@example.com
                 </div>
             </div>
             <div class="contact-item">
-                <div class="contact-icon">📱</div>
-                <div>
-                    <strong>Phone</strong><br>
-                    (555) 123-4567
-                </div>
+              <div class="contact-icon">
+                <img src="images/linkedin-icon.png" alt="LinkedIn" />
+              </div>
+              <div>
+                <strong>LinkedIn</strong><br>
+                linkedin.com/in/yourname
+              </div>
             </div>
             <div class="contact-item">
-                <div class="contact-icon">🌐</div>
-                <div>
-                    <strong>LinkedIn</strong><br>
-                    linkedin.com/in/yourname
+                <div class="contact-icon">
+                    <img src="images/github-icon.png" alt="GitHub" />
                 </div>
-            </div>
-            <div class="contact-item">
-                <div class="contact-icon">💻</div>
                 <div>
                     <strong>GitHub</strong><br>
                     github.com/yourusername
