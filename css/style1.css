@@ -277,10 +277,12 @@ section {
     column-gap: 0;
   }
 
-  #about .section-title {
-    grid-column: 1;
-    text-align: center;
-  }
+  #about .section-title.about-title {
+    grid-column: 1;      /* stays in text column */
+    margin-left: 0;       /* remove desktop offset */
+    margin-bottom: 1rem;  /* same spacing as desktop */
+    text-align: center;   /* center on mobile or fallback */
+}
 
   .about-content {
     grid-column: 1;
