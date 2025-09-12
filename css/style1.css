@@ -402,13 +402,13 @@ section {
 
 .timeline-item:nth-child(odd) .timeline-content {
     margin-right: 50%;
-    text-align: right;
+    text-align: left; /* Force left alignment */
     padding-right: 2rem;
 }
 
 .timeline-item:nth-child(even) .timeline-content {
     margin-left: 50%;
-    text-align: left;
+    text-align: left; /* Force left alignment */
     padding-left: 2rem;
 }
 
@@ -452,16 +452,13 @@ section {
     color: #444444;
     font-weight: 300;
     line-height: 1.6;
+    text-align: left; /* Force left alignment for all content */
 }
 
-.job-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.timeline-content.expanded .job-details {
-    max-height: 200px;
+.timeline-content ul {
+    text-align: left; /* Force left alignment for lists */
+    padding-left: 1.5rem; /* Add proper list indentation */
+    list-style-type: "→ ";
 }
 
 /* Contact Section */

@@ -98,7 +98,19 @@ class ParticleSystem {
                     particle.vy += dy * force * 0.001;
                 }
             }
+            // Apply friction/damping
+            const friction = 0.99; // adjust between 0.95-0.99 for different damping rates
+            particle.vx *= friction;
+            particle.vy *= friction;
 
+            // Maintain minimum velocity to prevent particles from stopping
+            const minSpeed = 0.5; // adjust this value for minimum movement speed
+            const currentSpeed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+            if (currentSpeed < minSpeed && currentSpeed > 0) {
+                const scale = minSpeed / currentSpeed;
+                particle.vx *= scale;
+                particle.vy *= scale;
+            }
             // Draw particle as uniform letter
             this.ctx.font = `bold 10px Inter`; // fixed size, matches hero section font
             this.ctx.fillStyle = `rgba(0,0,0,${particle.opacity})`;
@@ -221,13 +233,6 @@ const skillsObserver = new IntersectionObserver((entries) => {
 
 skillsObserver.observe(document.querySelector('#skills'));
 
-// Timeline item click to expand
-document.querySelectorAll('.timeline-content').forEach(item => {
-    item.addEventListener('click', () => {
-        item.classList.toggle('expanded');
-    });
-});
-
 // Performance optimization - reduce particle count on mobile
 if (window.innerWidth < 768 && particleSystem) {
     particleSystem.particleCount = 50;
@@ -239,14 +244,28 @@ document.addEventListener('mousemove', (e) => {
     console.log('Document mouse move:', e.clientX, e.clientY);
 });
 
-// Add hamburger menu listener
+// Add hamburger menu listener and mobile menu auto-close functionality
 function initMenuToggle() {
     const toggle = document.getElementById("menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+    
     if (toggle) {
+        // Toggle menu when hamburger is clicked
         toggle.addEventListener("click", function() {
-            document.querySelector(".nav-links").classList.toggle("active");
+            navLinks.classList.toggle("active");
         });
     }
+    
+    // Close mobile menu when any navigation link is clicked
+    const navLinkItems = document.querySelectorAll(".nav-links a");
+    navLinkItems.forEach(link => {
+        link.addEventListener("click", function() {
+            // Only close menu if it's currently active (mobile view)
+            if (navLinks.classList.contains("active")) {
+                navLinks.classList.remove("active");
+            }
+        });
+    });
 }
 
 if (document.readyState === 'loading') {
