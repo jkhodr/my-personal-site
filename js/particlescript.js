@@ -98,19 +98,7 @@ class ParticleSystem {
                     particle.vy += dy * force * 0.001;
                 }
             }
-            // Apply friction/damping
-            const friction = 0.99; // adjust between 0.95-0.99 for different damping rates
-            particle.vx *= friction;
-            particle.vy *= friction;
 
-            // Maintain minimum velocity to prevent particles from stopping
-            const minSpeed = 0.5; // adjust this value for minimum movement speed
-            const currentSpeed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-            if (currentSpeed < minSpeed && currentSpeed > 0) {
-                const scale = minSpeed / currentSpeed;
-                particle.vx *= scale;
-                particle.vy *= scale;
-            }
             // Draw particle as uniform letter
             this.ctx.font = `bold 10px Inter`; // fixed size, matches hero section font
             this.ctx.fillStyle = `rgba(0,0,0,${particle.opacity})`;
@@ -169,109 +157,134 @@ function initParticleSystem() {
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initParticleSystem);
-} else {
+// Initialize everything when DOM is ready
+function initializeAll() {
+    // Initialize particle system
     initParticleSystem();
+    
+    // Initialize menu toggle
+    initMenuToggle();
+    
+    // Initialize other event listeners
+    setupEventListeners();
 }
-
-
 
 // Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
+function setupEventListeners() {
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
         });
     });
-});
 
-// Navbar scroll effect
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    document.querySelectorAll('.section-title, .about-text, .timeline-item').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Skills animation
+    const skillsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const skillBars = entry.target.querySelectorAll('.skill-fill');
+                skillBars.forEach(bar => {
+                    const width = bar.getAttribute('data-width');
+                    setTimeout(() => {
+                        bar.style.width = width + '%';
+                    }, 500);
+                });
+            }
+        });
+    }, observerOptions);
+
+    const skillsSection = document.querySelector('#skills');
+    if (skillsSection) {
+        skillsObserver.observe(skillsSection);
     }
-});
 
-// Intersection Observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-        }
+    // Timeline item click to expand
+    document.querySelectorAll('.timeline-content').forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('expanded');
+        });
     });
-}, observerOptions);
 
-// Observe elements for animation
-document.querySelectorAll('.section-title, .about-text, .timeline-item').forEach(el => {
-    observer.observe(el);
-});
-
-// Skills animation
-const skillsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const skillBars = entry.target.querySelectorAll('.skill-fill');
-            skillBars.forEach(bar => {
-                const width = bar.getAttribute('data-width');
-                setTimeout(() => {
-                    bar.style.width = width + '%';
-                }, 500);
-            });
-        }
-    });
-}, observerOptions);
-
-skillsObserver.observe(document.querySelector('#skills'));
-
-// Performance optimization - reduce particle count on mobile
-if (window.innerWidth < 768 && particleSystem) {
-    particleSystem.particleCount = 50;
-    particleSystem.init();
+    // Performance optimization - reduce particle count on mobile
+    if (window.innerWidth < 768 && particleSystem) {
+        particleSystem.particleCount = 50;
+        particleSystem.init();
+    }
 }
 
-// Temporary test - remove this after testing
-document.addEventListener('mousemove', (e) => {
-    console.log('Document mouse move:', e.clientX, e.clientY);
-});
-
-// Add hamburger menu listener and mobile menu auto-close functionality
+// Fixed hamburger menu toggle
 function initMenuToggle() {
     const toggle = document.getElementById("menu-toggle");
     const navLinks = document.querySelector(".nav-links");
     
-    if (toggle) {
-        // Toggle menu when hamburger is clicked
-        toggle.addEventListener("click", function() {
+    if (toggle && navLinks) {
+        // Remove any existing event listeners to prevent duplicates
+        toggle.replaceWith(toggle.cloneNode(true));
+        const newToggle = document.getElementById("menu-toggle");
+        
+        newToggle.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Menu toggle clicked"); // Debug log
             navLinks.classList.toggle("active");
         });
-    }
-    
-    // Close mobile menu when any navigation link is clicked
-    const navLinkItems = document.querySelectorAll(".nav-links a");
-    navLinkItems.forEach(link => {
-        link.addEventListener("click", function() {
-            // Only close menu if it's currently active (mobile view)
-            if (navLinks.classList.contains("active")) {
-                navLinks.classList.remove("active");
+        
+        // Close menu when clicking on nav links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!newToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
             }
         });
-    });
+    }
 }
 
+// Initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        initMenuToggle();
-    });
+    document.addEventListener('DOMContentLoaded', initializeAll);
 } else {
-    initMenuToggle();
+    initializeAll();
 }
