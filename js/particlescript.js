@@ -99,6 +99,20 @@ class ParticleSystem {
                 }
             }
 
+            // Apply friction/damping
+            const friction = 0.985; // adjust between 0.95-0.99 for different damping rates
+            particle.vx *= friction;
+            particle.vy *= friction;
+
+            // Maintain minimum velocity to prevent particles from stopping
+            const minSpeed = 0.3; // adjust this value for minimum movement speed
+            const currentSpeed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+            if (currentSpeed < minSpeed && currentSpeed > 0) {
+                const scale = minSpeed / currentSpeed;
+                particle.vx *= scale;
+                particle.vy *= scale;
+            }
+
             // Draw particle as uniform letter
             this.ctx.font = `bold 10px Inter`; // fixed size, matches hero section font
             this.ctx.fillStyle = `rgba(0,0,0,${particle.opacity})`;
